@@ -1,0 +1,36 @@
+.app {
+    max-width: 500px;
+}
+
+.header {
+    margin-bottom: 10px;
+}
+
+.header .logo {
+    display: block;
+    width: 96px;
+    height: 96px;
+}
+
+.clock {
+    margin-bottom: 10px;
+    padding: 15px;
+    display: block;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.lot {
+    margin-bottom: 10px;
+    padding: 0 15px;
+    position: relative;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.price {
+    margin-top: 10px;
+    position: absolute;
+    right: 30px;
+    font-size: 42px;
+}
