@@ -22,30 +22,60 @@ const state = {
   ],
 }
 
-const app = document.createElement('div')
-app.className = 'app'
+const app = App(state)
+render(app, document.getElementById('root'))
 
-const header = document.createElement('div')
-header.className = 'header'
 
-const logo = document.createElement('img')
-logo.className = 'logo'
-logo.src = 'pinecone-logo.png'
-logo.alt = 'pinecone logo'
+function App() {
+  const app = document.createElement('div')
 
-header.append(logo)
-app.append(header)
+  app.className = 'app'
+  app.append(Header())
+  app.append(Clock({ time: state.time }))
+  app.append(Lots({ lots: state.lots }))
 
-const clock = document.createElement('span')
-clock.className = 'clock'
-clock.innerText = state.time.toLocaleTimeString()
+  return app
+}
 
-app.append(clock)
+function Header() {
+  const header = document.createElement('div')
 
-const lots = document.createElement('div')
-lots.className = 'lots'
+  header.className = 'header'
+  header.append(Logo())
 
-state.lots.forEach(lot => {
+  return header
+}
+
+function Logo() {
+  const logo = document.createElement('img')
+
+  logo.className = 'logo'
+  logo.src = 'pinecone-logo.png'
+  logo.alt = 'pinecone logo'
+
+  return logo
+}
+
+
+function Clock({ time }) {
+  const clock = document.createElement('span')
+
+  clock.className = 'clock'
+  clock.innerText = time.toLocaleTimeString()
+
+  return clock
+}
+
+function Lots({ lots }){
+  const list = document.createElement('div')
+  list.className = 'list'
+
+  lots.forEach(lot => list.append(Lot(lot)))
+
+  return list
+}
+
+function Lot(lot) {
   const node = document.createElement('article')
   node.className = 'lot'
 
@@ -62,11 +92,9 @@ state.lots.forEach(lot => {
   description.innerText = lot.description
   node.append(description)
 
-  lots.append(node)
-})
+  return node
+}
 
-app.append(lots)
-
-
-const root = document.getElementById('root')
-root.append(app)
+function render(app, root) {
+  root.append(app)
+}
