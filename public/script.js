@@ -66,7 +66,7 @@ function Clock({ time }) {
   return clock
 }
 
-function Lots({ lots }){
+function Lots({ lots }) {
   const list = document.createElement('div')
   list.className = 'list'
 
@@ -94,6 +94,13 @@ function Lot(lot) {
 
   return node
 }
+
+setInterval(() => {
+  const time = new Date()
+
+  const clock = document.querySelector('.app > .clock')
+  clock.innerText = time.toLocaleTimeString()
+})
 
 function render(app, root) {
   root.append(app)
