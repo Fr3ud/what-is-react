@@ -58,10 +58,24 @@ function Logo() {
 
 
 function Clock({ time }) {
-  const clock = document.createElement('span')
-
+  const clock = document.createElement('div')
   clock.className = 'clock'
-  clock.innerText = time.toLocaleTimeString()
+
+  const value = document.createElement('span')
+  value.className = 'value'
+  value.innerText = time.toLocaleTimeString()
+
+  clock.append(value)
+
+  const icon = document.createElement('span')
+
+  if (time.getHours() >= 7 && time.getHours() <= 21) {
+    icon.className = 'icon day'
+  } else {
+    icon.className = 'icon night'
+  }
+
+  clock.append(icon)
 
   return clock
 }
