@@ -20,6 +20,28 @@
     border-radius: 6px;
 }
 
+.clock .value {
+    margin-right: 15px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.clock .icon {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 16px;
+}
+
+.clock .icon.day {
+    background-color: orange;
+}
+
+.clock .icon.night {
+    background-color: midnightblue;
+}
+
 .lot {
     margin-bottom: 10px;
     padding: 0 15px;
