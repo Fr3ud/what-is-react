@@ -98,8 +98,12 @@ function Lot(lot) {
 setInterval(() => {
   const time = new Date()
 
-  const clock = document.querySelector('.app > .clock')
-  clock.innerText = time.toLocaleTimeString()
+  const app = document.querySelector('.app')
+  const clock = app.querySelector('.clock')
+
+  const newClock = Clock({ time })
+
+  app.replaceChild(newClock, clock)
 })
 
 function render(app, root) {
