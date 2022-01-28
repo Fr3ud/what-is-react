@@ -110,14 +110,17 @@ function Lot(lot) {
 }
 
 setInterval(() => {
-  const time = new Date()
+  const root = document.getElementById('root')
+  const app = root.querySelector('.app')
 
-  const app = document.querySelector('.app')
-  const clock = app.querySelector('.clock')
+  const newState = {
+    ...state,
+    time: new Date()
+  }
 
-  const newClock = Clock({ time })
+  const newApp = App(newState)
 
-  app.replaceChild(newClock, clock)
+  root.replaceChild(newApp, app)
 })
 
 function render(app, root) {
