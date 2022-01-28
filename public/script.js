@@ -22,11 +22,9 @@ const state = {
   ],
 }
 
-const app = App(state)
-render(app, document.getElementById('root'))
+renderView(state)
 
-
-function App() {
+function App(state) {
   const app = document.createElement('div')
 
   app.className = 'app'
@@ -109,20 +107,20 @@ function Lot(lot) {
   return node
 }
 
-setInterval(() => {
-  const root = document.getElementById('root')
-  const app = root.querySelector('.app')
+function render(app, root) {
+  root.innerHTML = ''
+  root.append(app)
+}
 
+function renderView(state) {
+  render(App(state), document.getElementById('root'))
+}
+
+setInterval(() => {
   const newState = {
     ...state,
     time: new Date()
   }
 
-  const newApp = App(newState)
-
-  root.replaceChild(newApp, app)
+  renderView(newState)
 })
-
-function render(app, root) {
-  root.append(app)
-}
