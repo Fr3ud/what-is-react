@@ -1,4 +1,5 @@
 import { Api } from './Api.js'
+import { Stream } from './Stream.js'
 
 let state = {
   time: new Date(),
@@ -124,4 +125,24 @@ Api.get('/lots').then(lots => {
   state = { ...state, lots }
 
   renderView(state)
+
+  const onPrice = data => {
+    state = {
+      ...state,
+      lots: state.lots.map(lot => {
+        if (lot.id === data.id) {
+          return {
+            ...lot,
+            price: data.price,
+          }
+        }
+
+        return lot
+      })
+    }
+
+    renderView(state)
+  }
+
+  lots.forEach(lot => Stream.subscribe(`price-${lot.id}`, onPrice))
 })
