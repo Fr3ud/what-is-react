@@ -1,4 +1,6 @@
-const state = {
+import { Api } from './Api.js'
+
+let state = {
   time: new Date(),
   lots: null,
 }
@@ -69,7 +71,7 @@ function Loading() {
 
 function Lots({ lots }) {
   if (!lots) {
-    Loading()
+    return Loading()
   }
 
   const list = document.createElement('div')
@@ -110,10 +112,16 @@ function renderView(state) {
 }
 
 setInterval(() => {
-  const newState = {
+  state = {
     ...state,
     time: new Date()
   }
 
-  renderView(newState)
+  renderView(state)
+}, 1000)
+
+Api.get('/lots').then(lots => {
+  state = { ...state, lots }
+
+  renderView(state)
 })
