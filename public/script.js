@@ -38,7 +38,6 @@ function Logo() {
   return logo
 }
 
-
 function Clock({ time }) {
   const clock = document.createElement('div')
   clock.className = 'clock'
@@ -103,9 +102,56 @@ function Lot(lot) {
   return node
 }
 
-function render(app, root) {
-  root.innerHTML = ''
-  root.append(app)
+function render(virtualDOM, realDOMRoot) {
+  const virtualDOMRoot = document.createElement(realDOMRoot.tagName)
+  virtualDOMRoot.id = realDOMRoot.id
+  virtualDOMRoot.append(virtualDOM)
+
+  sync(realDOMRoot, virtualDOMRoot)
+}
+
+function sync(realNode, virtualNode) {
+  // Sync element
+  if (realNode.id !== virtualNode.id) {
+    realNode.id = virtualNode.id
+  }
+
+  if (realNode.className !== virtualNode.className) {
+    realNode.className = virtualNode.className
+  }
+
+  if (virtualNode.attributes) {
+    Array.from(virtualNode.attributes)
+      .forEach(attr => {
+        console.log('virtualNode', virtualNode)
+        console.log('realNode', realNode)
+        return realNode[attr.name] = attr.value
+      })
+  }
+
+
+
+  // Sync text nodes
+  if (realNode.nodeValue !== virtualNode.nodeValue) {
+    realNode.nodeValue = virtualNode.nodeValue
+  }
+
+  // Clear real node
+  realNode.innerHTML = ''
+
+  // Sync child nodes
+  const virtualChildNodes = virtualNode.childNodes
+
+  for (let i = 0; i < virtualChildNodes.length; i++) {
+    const vNode = virtualChildNodes[i]
+    const rNode = vNode.type === Node.TEXT_NODE
+      ? document.createTextNode('')
+      : document.createElement(vNode.tagName)
+
+    sync(rNode, vNode)
+
+    realNode.appendChild(rNode)
+  }
 }
 
 function renderView(state) {
@@ -119,7 +165,7 @@ setInterval(() => {
   }
 
   renderView(state)
-}, 1000)
+}, 10000)
 
 Api.get('/lots').then(lots => {
   state = { ...state, lots }

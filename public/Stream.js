@@ -8,7 +8,7 @@ export const Stream = {
           id   : parseInt(match[1]),
           price: Math.round(Math.random() * 10 + 42),
         })
-      }, 400)
+      }, 4000)
     }
   }
 }
