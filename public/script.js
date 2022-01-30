@@ -122,11 +122,7 @@ function sync(realNode, virtualNode) {
 
   if (virtualNode.attributes) {
     Array.from(virtualNode.attributes)
-      .forEach(attr => {
-        console.log('virtualNode', virtualNode)
-        console.log('realNode', realNode)
-        return realNode[attr.name] = attr.value
-      })
+      .forEach(attr => realNode[attr.name] = attr.value)
   }
 
 
@@ -144,7 +140,7 @@ function sync(realNode, virtualNode) {
 
   for (let i = 0; i < virtualChildNodes.length; i++) {
     const vNode = virtualChildNodes[i]
-    const rNode = vNode.type === Node.TEXT_NODE
+    const rNode = vNode.nodeType === Node.TEXT_NODE
       ? document.createTextNode('')
       : document.createElement(vNode.tagName)
 
@@ -165,7 +161,7 @@ setInterval(() => {
   }
 
   renderView(state)
-}, 10000)
+}, 1000)
 
 Api.get('/lots').then(lots => {
   state = { ...state, lots }
