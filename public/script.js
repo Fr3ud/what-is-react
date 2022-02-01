@@ -132,22 +132,46 @@ function sync(realNode, virtualNode) {
     realNode.nodeValue = virtualNode.nodeValue
   }
 
-  // Clear real node
-  realNode.innerHTML = ''
-
   // Sync child nodes
   const virtualChildNodes = virtualNode.childNodes
+  const realChildNodes = realNode.childNodes
 
-  for (let i = 0; i < virtualChildNodes.length; i++) {
+  for (let i = 0; i < virtualChildNodes.length || i < realChildNodes.length; i++) {
     const vNode = virtualChildNodes[i]
-    const rNode = vNode.nodeType === Node.TEXT_NODE
-      ? document.createTextNode('')
-      : document.createElement(vNode.tagName)
+    const rNode = realChildNodes[i]
 
-    sync(rNode, vNode)
+    // Remove
+    if (!vNode && rNode) {
+      realNode.remove(rNode)
+    }
 
-    realNode.appendChild(rNode)
+    // Update
+    if (vNode && rNode && vNode.tagName === rNode.tagName) {
+      sync(rNode, vNode)
+    }
+
+    // Replace
+    if (vNode && rNode && vNode.tagName !== rNode.tagName) {
+      const newRealNode = createRealNodeByVirtual(vNode)
+
+      sync(newRealNode, vNode)
+      realNode.replaceChild(newRealNode, rNode)
+    }
+
+    // Add
+    if (vNode && !rNode) {
+      const newRealNode = createRealNodeByVirtual(vNode)
+
+      sync(newRealNode, vNode)
+      realNode.appendChild(newRealNode)
+    }
   }
+}
+
+function createRealNodeByVirtual(virtualNode) {
+  return virtualNode.nodeType === Node.TEXT_NODE
+    ? document.createTextNode('')
+    : document.createElement(virtualNode.tagName)
 }
 
 function renderView(state) {
