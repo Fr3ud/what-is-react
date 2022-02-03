@@ -85,6 +85,7 @@ function Lots({ lots }) {
 function Lot(lot) {
   const node = document.createElement('article')
   node.className = 'lot'
+  node.data.key = lot.id
 
   const price = document.createElement('div')
   price.className = 'price'
@@ -124,8 +125,6 @@ function sync(realNode, virtualNode) {
     Array.from(virtualNode.attributes)
       .forEach(attr => realNode[attr.name] = attr.value)
   }
-
-
 
   // Sync text nodes
   if (realNode.nodeValue !== virtualNode.nodeValue) {
