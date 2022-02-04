@@ -29,13 +29,14 @@ function Header() {
 }
 
 function Logo() {
-  const logo = document.createElement('img')
-
-  logo.className = 'logo'
-  logo.src = 'pinecone-logo.png'
-  logo.alt = 'pinecone logo'
-
-  return logo
+  return {
+    tag       : 'img',
+    attributes: {
+      className: 'logo',
+      src      : 'pinecone-logo.png',
+      alt      : 'pinecone logo',
+    }
+  }
 }
 
 function Clock({ time }) {
