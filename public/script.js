@@ -13,20 +13,20 @@ function App(state) {
     tag     : 'div',
     props   : {
       className: 'app',
+      children : [
+        { type : Header,
+          props: {},
+        },
+        {
+          type : Clock,
+          props: { time: state.time },
+        },
+        {
+          type : Lots,
+          props: { lots: state.lots },
+        }
+      ],
     },
-    children: [
-      { type : Header,
-        props: {},
-      },
-      {
-        type : Clock,
-        props: { time: state.time },
-      },
-      {
-        type : Lots,
-        props: { lots: state.lots },
-      }
-    ]
   }
 }
 
@@ -34,11 +34,14 @@ function Header() {
   return {
     tag     : 'header',
     props   : {
-      className: 'header'
+      className: 'header',
+      children : [
+        {
+          type : Logo,
+          props: {},
+        }
+      ],
     },
-    children: [
-      { type: Logo }
-    ]
   }
 }
 
