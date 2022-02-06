@@ -57,26 +57,31 @@ function Logo() {
 }
 
 function Clock({ time }) {
-  const clock = document.createElement('div')
-  clock.className = 'clock'
+  const isDay = time.getHours() >= 7 && time.getHours() <= 21
 
-  const value = document.createElement('span')
-  value.className = 'value'
-  value.innerText = time.toLocaleTimeString()
-
-  clock.append(value)
-
-  const icon = document.createElement('span')
-
-  if (time.getHours() >= 7 && time.getHours() <= 21) {
-    icon.className = 'icon day'
-  } else {
-    icon.className = 'icon night'
+  return {
+    type : 'div',
+    props: {
+      className: 'clock',
+      children : [
+        {
+          type : 'span',
+          props: {
+            className: 'value',
+            children : [
+              time.toLocaleString()
+            ],
+          },
+        },
+        {
+          type : 'span',
+          props: {
+            className: isDay ? 'icon day' : 'icon night',
+          },
+        },
+      ],
+    },
   }
-
-  clock.append(icon)
-
-  return clock
 }
 
 function Loading() {
