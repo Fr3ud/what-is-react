@@ -85,11 +85,13 @@ function Clock({ time }) {
 }
 
 function Loading() {
-  const element = document.createElement('div')
-  element.className = 'loading'
-  element.innerText = 'Loading...'
-
-  return element
+  return {
+    type : 'div',
+    props: {
+      className: 'loading',
+      children : ['Loading...'],
+    },
+  }
 }
 
 function Lots({ lots }) {
