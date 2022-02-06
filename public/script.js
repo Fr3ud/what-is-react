@@ -9,14 +9,25 @@ let state = {
 renderView(state)
 
 function App(state) {
-  const app = document.createElement('div')
-
-  app.className = 'app'
-  app.append(Header())
-  app.append(Clock({ time: state.time }))
-  app.append(Lots({ lots: state.lots }))
-
-  return app
+  return {
+    tag       : 'div',
+    attributes: {
+      className: 'app',
+    },
+    children  : [
+      { type : Header,
+        props: {},
+      },
+      {
+        type : Clock,
+        props: { time: state.time },
+      },
+      {
+        type : Lots,
+        props: { lots: state.lots },
+      }
+    ]
+  }
 }
 
 function Header() {
