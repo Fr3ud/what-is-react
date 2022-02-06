@@ -94,15 +94,22 @@ function Loading() {
 
 function Lots({ lots }) {
   if (!lots) {
-    return Loading()
+    return {
+      type : Loading,
+      props: {},
+    }
   }
 
-  const list = document.createElement('div')
-  list.className = 'list'
-
-  lots.forEach(lot => list.append(Lot(lot)))
-
-  return list
+  return {
+    type : 'div',
+    props: {
+      className: 'lots',
+      children : lots.map(lot => ({
+        type : Lot,
+        props: { lot },
+      })),
+    },
+  }
 }
 
 function Lot(lot) {
