@@ -146,9 +146,14 @@ function Lot(lot) {
 }
 
 function render(virtualDOM, realDOMRoot) {
-  const virtualDOMRoot = document.createElement(realDOMRoot.tagName)
-  virtualDOMRoot.id = realDOMRoot.id
-  virtualDOMRoot.append(virtualDOM)
+  const virtualDOMRoot = {
+    type : realDOMRoot.tagName.toLowerCase(),
+    props: {
+      id      : realDOMRoot.id,
+      children: [virtualDOM],
+      ...realDOMRoot.attributes,
+    },
+  }
 
   sync(realDOMRoot, virtualDOMRoot)
 }
