@@ -146,16 +146,39 @@ function Lot(lot) {
 }
 
 function render(virtualDOM, realDOMRoot) {
+  const evaluatedVirtualDOM = evaluate(virtualDOM)
+
   const virtualDOMRoot = {
     type : realDOMRoot.tagName.toLowerCase(),
     props: {
       id      : realDOMRoot.id,
-      children: [virtualDOM],
+      children: [evaluatedVirtualDOM],
       ...realDOMRoot.attributes,
     },
   }
 
   sync(realDOMRoot, virtualDOMRoot)
+}
+
+function evaluate(virtualNode) {
+  if (typeof virtualNode !== 'object') {
+    return virtualNode
+  }
+
+  if (typeof virtualNode === 'function') {
+    return evaluate(virtualNode(virtualNode.props))
+  }
+
+  const props = virtualNode.props || {}
+
+  return {
+    ...virtualNode,
+    props: {
+      ...props,
+      // children: props.children.map(evaluate),
+      children: Array.isArray(props.children) ? props.children.map(evaluate) : [evaluate(props.children)],
+    },
+  }
 }
 
 function sync(realNode, virtualNode) {
