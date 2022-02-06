@@ -115,24 +115,34 @@ function Lots({ lots }) {
 }
 
 function Lot(lot) {
-  const node = document.createElement('article')
-  node.className = 'lot'
-  node.data.key = lot.id
-
-  const price = document.createElement('div')
-  price.className = 'price'
-  price.innerText = lot.price
-  node.append(price)
-
-  const name = document.createElement('h1')
-  name.innerText = lot.name
-  node.append(name)
-
-  const description = document.createElement('p')
-  description.innerText = lot.description
-  node.append(description)
-
-  return node
+  return {
+    type : 'article',
+    key  : lot.id,
+    props: {
+      className: 'lot',
+      children : [
+        {
+          type : 'div',
+          props: {
+            className: 'price',
+            children : [ lot.price ],
+          },
+        },
+        {
+          type : 'h1',
+          props: {
+            children: [ lot.name ],
+          },
+        },
+        {
+          type : 'p',
+          props: {
+            children: [ lot.description ],
+          },
+        },
+      ],
+    },
+  }
 }
 
 function render(virtualDOM, realDOMRoot) {
