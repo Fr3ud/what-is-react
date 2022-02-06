@@ -20,12 +20,15 @@ function App(state) {
 }
 
 function Header() {
-  const header = document.createElement('div')
-
-  header.className = 'header'
-  header.append(Logo())
-
-  return header
+  return {
+    tag       : 'header',
+    attributes: {
+      className: 'header'
+    },
+    children  : [
+      { type: Logo }
+    ]
+  }
 }
 
 function Logo() {
