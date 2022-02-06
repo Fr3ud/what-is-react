@@ -10,7 +10,7 @@ renderView(state)
 
 function App(state) {
   return {
-    tag     : 'div',
+    type    : 'div',
     props   : {
       className: 'app',
       children : [
@@ -32,7 +32,7 @@ function App(state) {
 
 function Header() {
   return {
-    tag     : 'header',
+    type    : 'header',
     props   : {
       className: 'header',
       children : [
@@ -47,7 +47,7 @@ function Header() {
 
 function Logo() {
   return {
-    tag  : 'img',
+    type : 'img',
     props: {
       className: 'logo',
       src      : 'pinecone-logo.png',
