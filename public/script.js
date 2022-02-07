@@ -205,7 +205,7 @@ function sync(realNode, virtualNode) {
   }
 
   // Sync child nodes
-  const virtualChildNodes = virtualNode.childNodes
+  const virtualChildNodes = virtualNode.props ? virtualNode.props.children || [] : []
   const realChildNodes = realNode.childNodes
 
   for (let i = 0; i < virtualChildNodes.length || i < realChildNodes.length; i++) {
@@ -218,12 +218,12 @@ function sync(realNode, virtualNode) {
     }
 
     // Update
-    if (vNode && rNode && vNode.tagName === rNode.tagName) {
+    if (vNode && rNode && (vNode.type || '') === (rNode.tagName || '').toLowerCase()) { // TODO: add error handler
       sync(rNode, vNode)
     }
 
     // Replace
-    if (vNode && rNode && vNode.tagName !== rNode.tagName) {
+    if (vNode && rNode && (vNode.type || '') !== (rNode.tagName || '').toLowerCase()) { // TODO: add error handler
       const newRealNode = createRealNodeByVirtual(vNode)
 
       sync(newRealNode, vNode)
