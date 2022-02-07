@@ -241,9 +241,10 @@ function sync(realNode, virtualNode) {
 }
 
 function createRealNodeByVirtual(virtualNode) {
-  return virtualNode.nodeType === Node.TEXT_NODE
-    ? document.createTextNode('')
-    : document.createElement(virtualNode.tagName)
+  console.log('virtual', virtualNode.type)
+  return typeof virtualNode === 'object'
+    ? document.createElement(virtualNode.type)
+    : document.createTextNode('')
 }
 
 function renderView(state) {
