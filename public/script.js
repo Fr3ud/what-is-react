@@ -183,22 +183,25 @@ function evaluate(virtualNode) {
 
 function sync(realNode, virtualNode) {
   // Sync element
-  if (realNode.id !== virtualNode.id) {
-    realNode.id = virtualNode.id
+  if (virtualNode.props) {
+    Object.entries(virtualNode.props).forEach(([name, value]) => {
+      if (name === 'children' || name === 'key') {
+        return
+      }
+
+      if (realNode[name] !== value) {
+        realNode[name] = value
+      }
+    })
   }
 
-  if (realNode.className !== virtualNode.className) {
-    realNode.className = virtualNode.className
-  }
-
-  if (virtualNode.attributes) {
-    Array.from(virtualNode.attributes)
-      .forEach(attr => realNode[attr.name] = attr.value)
+  if (virtualNode.key) {
+    realNode.dataset.key = virtualNode.key
   }
 
   // Sync text nodes
-  if (realNode.nodeValue !== virtualNode.nodeValue) {
-    realNode.nodeValue = virtualNode.nodeValue
+  if (typeof virtualNode !== 'object' && virtualNode !== realNode.nodeValue) {
+    realNode.nodeValue = virtualNode
   }
 
   // Sync child nodes
