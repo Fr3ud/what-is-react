@@ -165,8 +165,8 @@ function evaluate(virtualNode) {
     return virtualNode
   }
 
-  if (typeof virtualNode === 'function') {
-    return evaluate(virtualNode(virtualNode.props))
+  if (typeof virtualNode.type === 'function') {
+    return evaluate(virtualNode.type(virtualNode.props))
   }
 
   const props = virtualNode.props || {}
