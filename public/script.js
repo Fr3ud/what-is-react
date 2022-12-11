@@ -8,142 +8,59 @@ let state = {
 
 renderView(state)
 
-function App(state) {
-  return {
-    type    : 'div',
-    props   : {
-      className: 'app',
-      children : [
-        {
-          type : Header,
-          props: {},
-        },
-        {
-          type : Clock,
-          props: { time: state.time },
-        },
-        {
-          type : Lots,
-          props: { lots: state.lots },
-        },
-      ],
-    },
-  }
+function createElement(type, props = {}, ...children) {
+  const key = props.key || null
+
+  props.children = children.length === 1 ? children[0] : children
+
+  return { type, key, props }
+}
+
+function App({ state }) {
+  return createElement('div', { className: 'app' }, [
+    createElement(Header),
+    createElement(Clock, { time: state.time }),
+    createElement(Lots, { lots: state.lots }),
+  ])
 }
 
 function Header() {
-  return {
-    type    : 'header',
-    props   : {
-      className: 'header',
-      children : [
-        {
-          type : Logo,
-          props: {},
-        },
-      ],
-    },
-  }
+  return createElement('header', { className: 'header' }, createElement(Logo))
 }
 
 function Logo() {
-  return {
-    type : 'img',
-    props: {
-      className: 'logo',
-      src      : 'pinecone-logo.png',
-      alt      : 'pinecone logo',
-    },
-  }
+  return createElement('img', { className: 'logo', src: 'pinecone-logo.png', alt: 'pinecone logo' })
 }
 
 function Clock({ time }) {
   const isDay = time.getHours() >= 7 && time.getHours() <= 21
 
-  return {
-    type : 'div',
-    props: {
-      className: 'clock',
-      children : [
-        {
-          type : 'span',
-          props: {
-            className: 'value',
-            children : [
-              time.toLocaleString()
-            ],
-          },
-        },
-        {
-          type : 'span',
-          props: {
-            className: isDay ? 'icon day' : 'icon night',
-          },
-        },
-      ],
-    },
-  }
+  return createElement('div', { className: 'clock' }, [
+    createElement('span', { className: 'value' }, time.toLocaleString()),
+    createElement('span', { className: isDay ? 'icon day' : 'icon night' }),
+  ])
 }
 
 function Loading() {
-  return {
-    type : 'div',
-    props: {
-      className: 'loading',
-      children : ['Loading...'],
-    },
-  }
+  return createElement('div', { className: 'loading' }, 'Loading...')
 }
 
 function Lots({ lots }) {
   if (!lots) {
-    return {
-      type : Loading,
-      props: {},
-    }
+    return createElement(Loading)
   }
 
-  return {
-    type : 'div',
-    props: {
-      className: 'lots',
-      children : lots.map(lot => ({
-        type : Lot,
-        props: { lot },
-      })),
-    },
-  }
+  const elements = lots.map(lot => createElement(Lot, { lot, key: lot.id }))
+
+  return createElement('div', { className: 'lots' }, elements)
 }
 
-function Lot({ lot }) {
-  return {
-    type : 'article',
-    key  : lot.id,
-    props: {
-      className: 'lot',
-      children : [
-        {
-          type : 'div',
-          props: {
-            className: 'price',
-            children : [ lot.price ],
-          },
-        },
-        {
-          type : 'h1',
-          props: {
-            children: [ lot.name ],
-          },
-        },
-        {
-          type : 'p',
-          props: {
-            children: [ lot.description ],
-          },
-        },
-      ],
-    },
-  }
+function Lot({ lot, key }) {
+  return createElement('article', { className: 'lot', key }, [
+    createElement('div', { className: 'price' }, lot.price),
+    createElement('h1', {}, lot.name),
+    createElement('p', {}, lot.description),
+  ])
 }
 
 function render(virtualDOM, realDOMRoot) {
@@ -247,7 +164,7 @@ function createRealNodeByVirtual(virtualNode) {
 }
 
 function renderView(state) {
-  render(App(state), document.getElementById('root'))
+  render(createElement(App, { state }), document.getElementById('root'))
 }
 
 setInterval(() => {
