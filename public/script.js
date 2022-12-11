@@ -14,7 +14,8 @@ function App(state) {
     props   : {
       className: 'app',
       children : [
-        { type : Header,
+        {
+          type : Header,
           props: {},
         },
         {
@@ -24,7 +25,7 @@ function App(state) {
         {
           type : Lots,
           props: { lots: state.lots },
-        }
+        },
       ],
     },
   }
@@ -39,7 +40,7 @@ function Header() {
         {
           type : Logo,
           props: {},
-        }
+        },
       ],
     },
   }
@@ -52,7 +53,7 @@ function Logo() {
       className: 'logo',
       src      : 'pinecone-logo.png',
       alt      : 'pinecone logo',
-    }
+    },
   }
 }
 
@@ -114,7 +115,7 @@ function Lots({ lots }) {
   }
 }
 
-function Lot(lot) {
+function Lot({ lot }) {
   return {
     type : 'article',
     key  : lot.id,
@@ -157,7 +158,7 @@ function render(virtualDOM, realDOMRoot) {
     },
   }
 
-  sync(realDOMRoot, virtualDOMRoot)
+  sync(virtualDOMRoot, realDOMRoot)
 }
 
 function evaluate(virtualNode) {
@@ -175,24 +176,23 @@ function evaluate(virtualNode) {
     ...virtualNode,
     props: {
       ...props,
-      // children: props.children.map(evaluate),
       children: Array.isArray(props.children) ? props.children.map(evaluate) : [evaluate(props.children)],
     },
   }
 }
 
-function sync(realNode, virtualNode) {
+function sync(virtualNode, realNode) {
   // Sync element
   if (virtualNode.props) {
-    Object.entries(virtualNode.props).forEach(([name, value]) => {
-      if (name === 'children' || name === 'key') {
-        return
+    for (const [key, value] of Object.entries(virtualNode.props)) {
+      if (key === 'children' || key === 'key') {
+        continue
       }
 
-      if (realNode[name] !== value) {
-        realNode[name] = value
+      if (realNode[key] !== value) {
+        realNode[key] = value
       }
-    })
+    }
   }
 
   if (virtualNode.key) {
@@ -218,15 +218,15 @@ function sync(realNode, virtualNode) {
     }
 
     // Update
-    if (vNode && rNode && (vNode.type || '') === (rNode.tagName || '').toLowerCase()) { // TODO: add error handler
-      sync(rNode, vNode)
+    if (vNode && rNode && vNode.type === rNode.tagName?.toLowerCase()) { // TODO: add error handler
+      sync(vNode, rNode)
     }
 
     // Replace
-    if (vNode && rNode && (vNode.type || '') !== (rNode.tagName || '').toLowerCase()) { // TODO: add error handler
+    if (vNode && rNode && vNode.type !== rNode.tagName?.toLowerCase()) { // TODO: add error handler
       const newRealNode = createRealNodeByVirtual(vNode)
 
-      sync(newRealNode, vNode)
+      sync(vNode, newRealNode)
       realNode.replaceChild(newRealNode, rNode)
     }
 
@@ -234,14 +234,13 @@ function sync(realNode, virtualNode) {
     if (vNode && !rNode) {
       const newRealNode = createRealNodeByVirtual(vNode)
 
-      sync(newRealNode, vNode)
+      sync(vNode, newRealNode)
       realNode.appendChild(newRealNode)
     }
   }
 }
 
 function createRealNodeByVirtual(virtualNode) {
-  console.log('virtual', virtualNode.type)
   return typeof virtualNode === 'object'
     ? document.createElement(virtualNode.type)
     : document.createTextNode('')
