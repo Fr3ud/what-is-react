@@ -1,12 +1,23 @@
 import { Api } from './Api.js'
 import { Stream } from './Stream.js'
 
-let state = {
+const initialState = {
   time: new Date(),
   lots: null,
 }
 
-renderView(state)
+class Store {
+  constructor(initialState) {
+    this.state = initialState
+  }
+
+  getState = () => this.state
+  setState = state => this.state = state
+}
+
+const store = new Store(initialState)
+
+renderView(store.getState())
 
 function createElement(type, props = {}, ...children) {
   const key = props.key || null
@@ -168,23 +179,20 @@ function renderView(state) {
 }
 
 setInterval(() => {
-  state = {
-    ...state,
-    time: new Date()
-  }
+  store.setState({ ...store.getState(), time: new Date() })
 
-  renderView(state)
+  renderView(store.getState())
 }, 1000)
 
 Api.get('/lots').then(lots => {
-  state = { ...state, lots }
+  store.setState({ ...store.getState(), lots })
 
-  renderView(state)
+  renderView(store.getState())
 
   const onPrice = data => {
-    state = {
-      ...state,
-      lots: state.lots.map(lot => {
+    store.setState({
+      ...store.getState(),
+      lots: store.getState().lots.map(lot => {
         if (lot.id === data.id) {
           return {
             ...lot,
@@ -194,9 +202,9 @@ Api.get('/lots').then(lots => {
 
         return lot
       })
-    }
+    })
 
-    renderView(state)
+    renderView(store.getState())
   }
 
   lots.forEach(lot => Stream.subscribe(`price-${lot.id}`, onPrice))
