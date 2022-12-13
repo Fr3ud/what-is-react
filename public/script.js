@@ -12,7 +12,13 @@ class Store {
     this.listeners = []
   }
 
-  subscribe = callback => this.listeners.push(callback)
+  subscribe = callback => {
+    this.listeners.push(callback)
+
+    return () => {
+      this.listeners = this.listeners.filter(listener => listener !== callback)
+    }
+  }
 
   getState = () => this.state
 
