@@ -12,7 +12,10 @@ class Store {
   }
 
   getState = () => this.state
-  setState = state => this.state = state
+
+  changeState = diff => {
+    this.state = { ...this.state, ...(typeof diff === 'function' ? diff(this.state) : diff) }
+  }
 }
 
 const store = new Store(initialState)
@@ -179,20 +182,19 @@ function renderView(state) {
 }
 
 setInterval(() => {
-  store.setState({ ...store.getState(), time: new Date() })
+  store.changeState({ time: new Date() })
 
   renderView(store.getState())
 }, 1000)
 
 Api.get('/lots').then(lots => {
-  store.setState({ ...store.getState(), lots })
+  store.changeState({ lots })
 
   renderView(store.getState())
 
   const onPrice = data => {
-    store.setState({
-      ...store.getState(),
-      lots: store.getState().lots.map(lot => {
+    store.changeState(state => ({
+      lots: state.lots.map(lot => {
         if (lot.id === data.id) {
           return {
             ...lot,
@@ -202,7 +204,7 @@ Api.get('/lots').then(lots => {
 
         return lot
       })
-    })
+    }))
 
     renderView(store.getState())
   }
