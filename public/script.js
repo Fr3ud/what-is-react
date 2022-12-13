@@ -9,12 +9,17 @@ const initialState = {
 class Store {
   constructor(initialState) {
     this.state = initialState
+    this.listeners = []
   }
+
+  subscribe = callback => this.listeners.push(callback)
 
   getState = () => this.state
 
   changeState = diff => {
     this.state = { ...this.state, ...(typeof diff === 'function' ? diff(this.state) : diff) }
+
+    this.listeners.forEach(listener => listener())
   }
 }
 
@@ -181,16 +186,14 @@ function renderView(state) {
   render(createElement(App, { state }), document.getElementById('root'))
 }
 
+store.subscribe(() => renderView(store.getState()))
+
 setInterval(() => {
   store.changeState({ time: new Date() })
-
-  renderView(store.getState())
 }, 1000)
 
 Api.get('/lots').then(lots => {
   store.changeState({ lots })
-
-  renderView(store.getState())
 
   const onPrice = data => {
     store.changeState(state => ({
@@ -205,8 +208,6 @@ Api.get('/lots').then(lots => {
         return lot
       })
     }))
-
-    renderView(store.getState())
   }
 
   lots.forEach(lot => Stream.subscribe(`price-${lot.id}`, onPrice))
