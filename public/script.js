@@ -22,8 +22,8 @@ class Store {
 
   getState = () => this.state
 
-  changeState = diff => {
-    this.state = { ...this.state, ...(typeof diff === 'function' ? diff(this.state) : diff) }
+  setState = state => {
+    this.state = typeof state === 'function' ? state(this.state) : state
 
     this.listeners.forEach(listener => listener())
   }
@@ -195,14 +195,15 @@ function renderView(state) {
 store.subscribe(() => renderView(store.getState()))
 
 setInterval(() => {
-  store.changeState({ time: new Date() })
+  store.setState(state => ({ ...state, time: new Date() }))
 }, 1000)
 
 Api.get('/lots').then(lots => {
-  store.changeState({ lots })
+  store.setState(state => ({ ...state, lots }))
 
   const onPrice = data => {
-    store.changeState(state => ({
+    store.setState(state => ({
+      ...state,
       lots: state.lots.map(lot => {
         if (lot.id === data.id) {
           return {
