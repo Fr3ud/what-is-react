@@ -194,28 +194,35 @@ function renderView(state) {
 
 store.subscribe(() => renderView(store.getState()))
 
+function setTime(state, time) {
+  return { ...state, time }
+}
+
+function setLots(state, lots) {
+  return { ...state, lots }
+}
+
+function changeLotPrice(state, id, price) {
+  return {
+    ...state,
+    lots: state.lots.map(lot => {
+      if (lot.id === id) {
+        return {...lot, price}
+      }
+
+      return lot
+    })
+  }
+}
+
 setInterval(() => {
-  store.setState(state => ({ ...state, time: new Date() }))
+  store.setState(state => setTime(state, new Date()))
 }, 1000)
 
 Api.get('/lots').then(lots => {
-  store.setState(state => ({ ...state, lots }))
+  store.setState(state => setLots(state, lots))
 
-  const onPrice = data => {
-    store.setState(state => ({
-      ...state,
-      lots: state.lots.map(lot => {
-        if (lot.id === data.id) {
-          return {
-            ...lot,
-            price: data.price,
-          }
-        }
-
-        return lot
-      })
-    }))
-  }
-
-  lots.forEach(lot => Stream.subscribe(`price-${lot.id}`, onPrice))
+  lots.forEach(lot => Stream.subscribe(`price-${lot.id}`, data => {
+    store.setState(state => changeLotPrice(state, data.id, data.price))
+  }))
 })
