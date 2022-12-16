@@ -22,9 +22,14 @@ class Store {
 
   getState = () => this.state
 
-  setState = state => {
-    this.state = typeof state === 'function' ? state(this.state) : state
+  // setState = state => {
+  //   this.state = typeof state === 'function' ? state(this.state) : state
+  //
+  //   this.listeners.forEach(listener => listener())
+  // }
 
+  dispatch = action => {
+    this.state = appReducer(this.state, action)
     this.listeners.forEach(listener => listener())
   }
 }
@@ -224,13 +229,13 @@ function appReducer(state, action) {
 }
 
 setInterval(() => {
-  store.setState(state => appReducer(state, { type: SET_TIME, time: new Date() }))
+  store.dispatch({ type: SET_TIME, time: new Date() })
 }, 1000)
 
 Api.get('/lots').then(lots => {
-  store.setState(state => appReducer(state, { type: SET_LOTS, lots }))
+  store.dispatch({ type: SET_LOTS, lots })
 
   lots.forEach(lot => Stream.subscribe(`price-${lot.id}`, ({ id, price }) => {
-    store.setState(state => appReducer(state, { type: CHANGE_LOT_PRICE, id, price }))
+    store.dispatch({ type: CHANGE_LOT_PRICE, id, price })
   }))
 })
