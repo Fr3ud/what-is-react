@@ -5,7 +5,12 @@ const SET_TIME = 'SET_TIME'
 const SET_LOTS = 'SET_LOTS'
 const CHANGE_LOT_PRICE = 'CHANGE_LOT_PRICE'
 
-function appReducer(state, action) {
+const initialState = {
+  time: new Date(),
+  lots: null,
+}
+
+function appReducer(state = initialState, action) {
   if (action.type === SET_TIME) {
     return { ...state, time: action.time }
   }
@@ -30,15 +35,10 @@ function appReducer(state, action) {
   return state
 }
 
-const initialState = {
-  time: new Date(),
-  lots: null,
-}
-
 class Store {
   constructor(reducer, initialState) {
     this.reducer = reducer
-    this.state = initialState
+    this.state = reducer(initialState, { type: null })
     this.listeners = []
   }
 
@@ -64,7 +64,7 @@ class Store {
   }
 }
 
-const store = new Store(appReducer, initialState)
+const store = new Store(appReducer)
 
 renderView(store.getState())
 
