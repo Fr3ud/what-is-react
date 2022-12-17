@@ -1,13 +1,43 @@
 import { Api } from './Api.js'
 import { Stream } from './Stream.js'
 
+const SET_TIME = 'SET_TIME'
+const SET_LOTS = 'SET_LOTS'
+const CHANGE_LOT_PRICE = 'CHANGE_LOT_PRICE'
+
+function appReducer(state, action) {
+  if (action.type === SET_TIME) {
+    return { ...state, time: action.time }
+  }
+
+  if (action.type === SET_LOTS) {
+    return { ...state, lots: action.lots }
+  }
+
+  if (action.type === CHANGE_LOT_PRICE) {
+    return {
+      ...state,
+      lots: state.lots.map(lot => {
+        if (lot.id === action.id) {
+          return {...lot, price: action.price}
+        }
+
+        return lot
+      })
+    }
+  }
+
+  return state
+}
+
 const initialState = {
   time: new Date(),
   lots: null,
 }
 
 class Store {
-  constructor(initialState) {
+  constructor(reducer, initialState) {
+    this.reducer = reducer
     this.state = initialState
     this.listeners = []
   }
@@ -29,12 +59,12 @@ class Store {
   // }
 
   dispatch = action => {
-    this.state = appReducer(this.state, action)
+    this.state = this.reducer(this.state, action)
     this.listeners.forEach(listener => listener())
   }
 }
 
-const store = new Store(initialState)
+const store = new Store(appReducer, initialState)
 
 renderView(store.getState())
 
@@ -198,35 +228,6 @@ function renderView(state) {
 }
 
 store.subscribe(() => renderView(store.getState()))
-
-const SET_TIME = 'SET_TIME'
-const SET_LOTS = 'SET_LOTS'
-const CHANGE_LOT_PRICE = 'CHANGE_LOT_PRICE'
-
-function appReducer(state, action) {
-  if (action.type === SET_TIME) {
-    return { ...state, time: action.time }
-  }
-
-  if (action.type === SET_LOTS) {
-    return { ...state, lots: action.lots }
-  }
-
-  if (action.type === CHANGE_LOT_PRICE) {
-    return {
-      ...state,
-      lots: state.lots.map(lot => {
-        if (lot.id === action.id) {
-          return {...lot, price: action.price}
-        }
-
-        return lot
-      })
-    }
-  }
-
-  return state
-}
 
 setInterval(() => {
   store.dispatch({ type: SET_TIME, time: new Date() })
