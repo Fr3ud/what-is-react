@@ -229,14 +229,26 @@ function renderView(state) {
 
 store.subscribe(() => renderView(store.getState()))
 
+function setTime(time) {
+  return { type: SET_TIME, time }
+}
+
+function setLots(lots) {
+  return { type: SET_LOTS, lots }
+}
+
+function setLotPrice(id, price) {
+  return { type: CHANGE_LOT_PRICE, id, price }
+}
+
 setInterval(() => {
-  store.dispatch({ type: SET_TIME, time: new Date() })
+  store.dispatch(setTime(new Date()))
 }, 1000)
 
 Api.get('/lots').then(lots => {
-  store.dispatch({ type: SET_LOTS, lots })
+  store.dispatch(setLots(lots))
 
   lots.forEach(lot => Stream.subscribe(`price-${lot.id}`, ({ id, price }) => {
-    store.dispatch({ type: CHANGE_LOT_PRICE, id, price })
+    store.dispatch(setLotPrice(id, price))
   }))
 })
