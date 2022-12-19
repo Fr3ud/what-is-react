@@ -2,19 +2,27 @@ import { Api } from './Api.js'
 import { Stream } from './Stream.js'
 
 const SET_TIME = 'SET_TIME'
-const SET_LOTS = 'SET_LOTS'
-const CHANGE_LOT_PRICE = 'CHANGE_LOT_PRICE'
 
-const initialState = {
+const clockInitialState = {
   time: new Date(),
-  lots: null,
 }
 
-function appReducer(state = initialState, action) {
+function clockReducer(state = clockInitialState, action) {
   if (action.type === SET_TIME) {
     return { ...state, time: action.time }
   }
 
+  return state
+}
+
+const SET_LOTS = 'SET_LOTS'
+const CHANGE_LOT_PRICE = 'CHANGE_LOT_PRICE'
+
+const auctionInitialState = {
+  lots: null,
+}
+
+function auctionReducer(state = auctionInitialState, action) {
   if (action.type === SET_LOTS) {
     return { ...state, lots: action.lots }
   }
@@ -33,6 +41,18 @@ function appReducer(state = initialState, action) {
   }
 
   return state
+}
+
+function setTime(time) {
+  return { type: SET_TIME, time }
+}
+
+function setLots(lots) {
+  return { type: SET_LOTS, lots }
+}
+
+function setLotPrice(id, price) {
+  return { type: CHANGE_LOT_PRICE, id, price }
 }
 
 class Store {
@@ -64,7 +84,14 @@ class Store {
   }
 }
 
-const store = new Store(appReducer)
+function combineReducer(state = {}, action) {
+  return {
+    clock  : clockReducer(state.clock, action),
+    auction: auctionReducer(state.auction, action),
+  }
+}
+
+const store = new Store(combineReducer)
 
 renderView(store.getState())
 
@@ -79,8 +106,8 @@ function createElement(type, props = {}, ...children) {
 function App({ state }) {
   return createElement('div', { className: 'app' }, [
     createElement(Header),
-    createElement(Clock, { time: state.time }),
-    createElement(Lots, { lots: state.lots }),
+    createElement(Clock, { time: state.clock.time }),
+    createElement(Lots, { lots: state.auction.lots }),
   ])
 }
 
@@ -228,18 +255,6 @@ function renderView(state) {
 }
 
 store.subscribe(() => renderView(store.getState()))
-
-function setTime(time) {
-  return { type: SET_TIME, time }
-}
-
-function setLots(lots) {
-  return { type: SET_LOTS, lots }
-}
-
-function setLotPrice(id, price) {
-  return { type: CHANGE_LOT_PRICE, id, price }
-}
 
 setInterval(() => {
   store.dispatch(setTime(new Date()))
