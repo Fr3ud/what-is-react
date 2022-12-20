@@ -84,14 +84,22 @@ class Store {
   }
 }
 
-function combineReducer(state = {}, action) {
-  return {
-    clock  : clockReducer(state.clock, action),
-    auction: auctionReducer(state.auction, action),
+function combineReducer(reducers) {
+  return (state = {}, action) => {
+    const result = {}
+
+    Object.entries(reducers).forEach(([key, reducer]) => {
+      result[key] = reducer(state[key], action)
+    })
+
+    return result
   }
 }
 
-const store = new Store(combineReducer)
+const store = new Store(combineReducer({
+  clock  : clockReducer,
+  auction: auctionReducer,
+}))
 
 renderView(store.getState())
 
