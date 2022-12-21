@@ -151,7 +151,7 @@ function Lots({ lots }) {
 }
 
 function Lot({ lot, key }) {
-  return createElement('article', { className: 'lot', key }, [
+  return createElement('article', { className: 'lot' + (lot.favorite ? ' favorite' : ''), key }, [
     createElement('div', { className: 'price' }, lot.price),
     createElement('h1', {}, lot.name),
     createElement('p', {}, lot.description),

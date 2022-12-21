@@ -50,6 +50,11 @@
     border-radius: 6px;
 }
 
+.lot.favorite {
+    background: thistle;
+    border-color: thistle;
+}
+
 .price {
     margin-top: 10px;
     position: absolute;
