@@ -155,12 +155,12 @@ function Lot({ lot, key }) {
     createElement('div', { className: 'price' }, lot.price),
     createElement('h1', {}, lot.name),
     createElement('p', {}, lot.description),
-    createElement(Favorite, { lot }),
+    createElement(Favorite, { active: lot.favorite }),
   ])
 }
 
-function Favorite({ lot }) {
-  return createElement('button', {}, lot.favorite ? 'Unfavorite' : 'Favorite')
+function Favorite({ active }) {
+  return createElement('button', {}, active ? 'Unfavorite' : 'Favorite')
 }
 
 function render(virtualDOM, realDOMRoot) {
