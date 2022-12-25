@@ -160,7 +160,9 @@ function Lot({ lot, key }) {
 }
 
 function Favorite({ active }) {
-  return createElement('button', {}, active ? 'Unfavorite' : 'Favorite')
+  const className = active ? 'favorite' : 'unfavorite'
+
+  return createElement('button', { className }, active ? 'Unfavorite' : 'Favorite')
 }
 
 function render(virtualDOM, realDOMRoot) {
