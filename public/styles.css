@@ -57,22 +57,31 @@
 
 button {
     cursor: pointer;
-    border-radius: 4px;
-    padding: 4px 6px;
-    font-size: 0.8rem;
+    border-radius: 50%;
+    padding: 3px 5px;
+    font-size: 1rem;
     outline: none;
 }
 
-button.favorite {
-    background: #fff;
-    border: 1px solid #999;
-    color: #000;
+button:hover {
+    border: 2px solid #dc0000;
+    color: #dc0000;
+}
+
+button ion-icon {
+    vertical-align: middle;
 }
 
 button.favorite {
     background: #fff;
-    border: 1px solid #ff8c68;
+    border: 2px solid #dc0000;
     color: #dc0000;
+}
+
+button.favorite:hover {
+    border-color: #767676;
+    border-style: outset;
+    color: #767676;
 }
 
 .price {

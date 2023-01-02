@@ -160,11 +160,10 @@ function Lot({ lot, key }) {
 }
 
 function Favorite({ active }) {
-  const className = active ? 'favorite' : 'unfavorite'
+  const className = active ? 'favorite' : ''
   const icon = createElement('ion-icon', { name: active ? 'heart-sharp': 'heart-outline' })
-  const label = active ? 'Unfavorite' : 'Favorite'
 
-  return createElement('button', { className }, [icon, label])
+  return createElement('button', { className }, icon)
 }
 
 function render(virtualDOM, realDOMRoot) {
