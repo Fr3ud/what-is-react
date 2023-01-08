@@ -88,6 +88,14 @@ function setLotPrice(id, price) {
   return { type: CHANGE_LOT_PRICE, id, price }
 }
 
+function addToFavorite(id) {
+  return { type: ADD_TO_FAVORITE, id }
+}
+
+function removeFromFavorite(id) {
+  return { type: REMOVE_FROM_FAVORITE, id }
+}
+
 class Store {
   constructor(reducer, initialState) {
     this.reducer = reducer
