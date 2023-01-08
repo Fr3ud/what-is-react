@@ -2,6 +2,10 @@ import { Api } from './Api.js'
 import { Stream } from './Stream.js'
 
 const SET_TIME = 'SET_TIME'
+const SET_LOTS = 'SET_LOTS'
+const CHANGE_LOT_PRICE = 'CHANGE_LOT_PRICE'
+const ADD_TO_FAVORITE = 'ADD_TO_FAVORITE'
+const REMOVE_FROM_FAVORITE = 'REMOVE_FROM_FAVORITE'
 
 const clockInitialState = {
   time: new Date(),
