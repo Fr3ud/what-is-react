@@ -88,11 +88,11 @@ function setLotPrice(id, price) {
   return { type: CHANGE_LOT_PRICE, id, price }
 }
 
-function addToFavorite(id) {
+function addLotToFavorite(id) {
   return { type: ADD_TO_FAVORITE, id }
 }
 
-function removeFromFavorite(id) {
+function removeLotFromFavorite(id) {
   return { type: REMOVE_FROM_FAVORITE, id }
 }
 
@@ -309,6 +309,18 @@ function createRealNodeByVirtual(virtualNode) {
 
 function renderView(state) {
   render(createElement(App, { state }), document.getElementById('root'))
+}
+
+function addToFavorite(id) {
+  Api.post(`lots/${ id }/add-favorite`)
+    .then(() => store.dispatch(addLotToFavorite(id)))
+  // .catch()
+}
+
+function removeFromFavorite(id) {
+  Api.post(`lots/${ id }/remove-favorite`)
+    .then(() => store.dispatch(removeLotFromFavorite(id)))
+    // .catch()
 }
 
 store.subscribe(() => renderView(store.getState()))
