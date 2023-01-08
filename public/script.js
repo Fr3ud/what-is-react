@@ -19,9 +19,6 @@ function clockReducer(state = clockInitialState, action) {
   return state
 }
 
-const SET_LOTS = 'SET_LOTS'
-const CHANGE_LOT_PRICE = 'CHANGE_LOT_PRICE'
-
 const auctionInitialState = {
   lots: null,
 }
@@ -37,6 +34,38 @@ function auctionReducer(state = auctionInitialState, action) {
       lots: state.lots.map(lot => {
         if (lot.id === action.id) {
           return {...lot, price: action.price}
+        }
+
+        return lot
+      })
+    }
+  }
+
+  if (action.type === ADD_TO_FAVORITE) {
+    return {
+      ...state,
+      lots: state.lots.map(lot => {
+        if (lot.id === action.id) {
+          return {
+            ...lot,
+            favorite: true,
+          }
+        }
+
+        return lot
+      })
+    }
+  }
+
+  if (action.type === REMOVE_FROM_FAVORITE) {
+    return {
+      ...state,
+      lots: state.lots.map(lot => {
+        if (lot.id === action.id) {
+          return {
+            ...lot,
+            favorite: false,
+          }
         }
 
         return lot
