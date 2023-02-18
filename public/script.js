@@ -1,3 +1,4 @@
+import { Store } from './Store'
 import { Api } from './Api.js'
 import { Stream } from './Stream.js'
 
@@ -94,35 +95,6 @@ function addLotToFavorite(id) {
 
 function removeLotFromFavorite(id) {
   return { type: REMOVE_FROM_FAVORITE, id }
-}
-
-class Store {
-  constructor(reducer, initialState) {
-    this.reducer = reducer
-    this.state = reducer(initialState, { type: null })
-    this.listeners = []
-  }
-
-  subscribe = callback => {
-    this.listeners.push(callback)
-
-    return () => {
-      this.listeners = this.listeners.filter(listener => listener !== callback)
-    }
-  }
-
-  getState = () => this.state
-
-  // setState = state => {
-  //   this.state = typeof state === 'function' ? state(this.state) : state
-  //
-  //   this.listeners.forEach(listener => listener())
-  // }
-
-  dispatch = action => {
-    this.state = this.reducer(this.state, action)
-    this.listeners.forEach(listener => listener())
-  }
 }
 
 function combineReducer(reducers) {
